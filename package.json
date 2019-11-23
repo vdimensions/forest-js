@@ -1,26 +1,14 @@
 {
-  "name": "forest-js",
-  "version": "0.1.0",
+  "name": "@vdimensions/forest-js",
+  "version": "0.1.2",
   "description": "Forest (Frontend Over REST) javascript client core",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
+    "prepare": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vdimensions/forest-js.git"
-  },
-  "keywords": [
-    "forest",
-    "forest-js"
-  ],
-  "author": "Virtual Dimensions",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/vdimensions/forest-js/issues"
-  },
-  "homepage": "https://github.com/vdimensions/forest-js#readme",
-  "private": true,
   "dependencies": {
     "deep-equal": "^1.1.1",
     "immutable": "4.0.0-rc.12",
@@ -34,7 +22,22 @@
     "tslint": "^5.20.1",
     "typescript": "3.6.4"
   },
+
+  "author": "Virtual Dimensions",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/vdimensions/forest-js#readme",
+  "keywords": [
+    "forest",
+    "forest-js"
+  ],
+  "bugs": {
+    "url": "https://github.com/vdimensions/forest-js/issues"
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vdimensions/forest-js.git"
   }
 }

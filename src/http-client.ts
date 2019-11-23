@@ -1,5 +1,5 @@
 import * as Immutable from "immutable";
-import { IForestClient, ViewState } from "./index";
+import { IForestClient, ViewState } from "./core";
 
 const HeaderNames = {
     ACCEPT: "Accept",
@@ -152,8 +152,6 @@ class ForestHttpClientImpl implements IForestClient {
     }
 }
 
-const ForestHttpClient = {
+export const ForestHttpClient = {
     create: (baseUrl: string) => new ForestHttpClientImpl(baseUrl)
 };
-
-export default ForestHttpClient;
