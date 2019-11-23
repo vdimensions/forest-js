@@ -1,7 +1,25 @@
 {
   "name": "forest-js",
   "version": "0.1.0",
+  "description": "Forest (Frontend Over REST) javascript client core",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vdimensions/forest-js.git"
+  },
+  "keywords": [
+    "forest",
+    "forest-js"
+  ],
   "author": "Virtual Dimensions",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/vdimensions/forest-js/issues"
+  },
+  "homepage": "https://github.com/vdimensions/forest-js#readme",
   "private": true,
   "dependencies": {
     "deep-equal": "^1.1.1",
