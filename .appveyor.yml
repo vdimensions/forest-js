@@ -14,8 +14,8 @@ install:
 build: off
 deploy_script:
 - ps: >-
-    echo $APPVEYOR_BUILD_VERSION
+    echo "Publishing version $env:APPVEYOR_BUILD_VERSION"
 
-    npm version $APPVEYOR_BUILD_VERSION
+    npm version $env:APPVEYOR_BUILD_VERSION
 
     npm publish
