@@ -2,10 +2,13 @@ version: 0.1.{build}
 #image: Visual Studio 2019
 environment:
   nodejs_version: 10
+  npm_registry: npm.pkg.github.com
 install:
 - ps: >-
     Install-Product node $env:nodejs_version
-    "//registry.npmjs.org/:_authToken=$env:GH_PACKAGES_TOKEN`n" | out-file "$env:userprofile\.npmrc" -Encoding ASCII
+    
+    "//$env:npm_registry/:_authToken=$env:GH_PACKAGES_TOKEN`n" | out-file "$env:userprofile\.npmrc" -Encoding ASCII
+
     npm install --loglevel=error
 after_deploy:
 - ps: npm version $env:APPVEYOR_BUILD_VERSION 
