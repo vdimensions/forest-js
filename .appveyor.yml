@@ -13,5 +13,5 @@ install:
 - npm install --loglevel=error
 build: off
 deploy_script:
-- npm version $env:APPVEYOR_BUILD_VERSION --no-git-tag-version
+- ps: npm version $env:APPVEYOR_BUILD_VERSION --no-git-tag-version --loglevel=error
 - npm publish
