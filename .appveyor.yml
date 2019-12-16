@@ -2,6 +2,9 @@ version: 0.1.{build}
 environment:
   nodejs_version: 10
   npm_registry: npm.pkg.github.com
+branches:
+only:
+- master
 install:
 - ps: >-
     Install-Product node $env:nodejs_version
@@ -10,8 +13,8 @@ install:
 
     npm install --loglevel=error
 build: off
-after_deploy:
-- ps:  >-
+deploy_script:
+- ps: >-
     npm version $APPVEYOR_BUILD_VERSION
 
     npm publish
