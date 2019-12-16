@@ -12,5 +12,5 @@ install:
     "//$env:npm_registry/:_authToken=$env:GH_PACKAGES_TOKEN`n" | out-file "$env:userprofile\.npmrc" -Encoding ASCII
 build: off
 deploy_script:
-- ps: npm version $env:APPVEYOR_BUILD_VERSION
+- ps: npm version $env:APPVEYOR_BUILD_VERSION --no-git-tag-version
 - ps: npm publish
