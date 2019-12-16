@@ -3,8 +3,8 @@ environment:
   nodejs_version: 10
   npm_registry: npm.pkg.github.com
 branches:
-only:
-- master
+  only:
+  - master
 install:
 - ps: >-
     Install-Product node $env:nodejs_version
