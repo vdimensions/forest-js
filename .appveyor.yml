@@ -3,9 +3,10 @@ version: 0.1.{build}
 environment:
   nodejs_version: 10
 install:
-- ps: Install-Product node $env:nodejs_version
-- ps: "//registry.npmjs.org/:_authToken=$env:GH_PACKAGES_TOKEN`n" | out-file "$env:userprofile\.npmrc" -Encoding ASCII
-- ps: install --loglevel=error
+- ps: >-
+    Install-Product node $env:nodejs_version
+    "//registry.npmjs.org/:_authToken=$env:GH_PACKAGES_TOKEN`n" | out-file "$env:userprofile\.npmrc" -Encoding ASCII
+    npm install --loglevel=error
 after_deploy:
 - ps: npm version $env:APPVEYOR_BUILD_VERSION 
 - ps: npm publish
