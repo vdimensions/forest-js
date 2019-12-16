@@ -10,11 +10,12 @@ install:
     Install-Product node $env:nodejs_version
 
     "//$env:npm_registry/:_authToken=$env:GH_PACKAGES_TOKEN`n" | out-file "$env:userprofile\.npmrc" -Encoding ASCII
-
-    npm install --loglevel=error
+  npm install --loglevel=error
 build: off
 deploy_script:
 - ps: >-
+    echo $APPVEYOR_BUILD_VERSION
+    
     npm version $APPVEYOR_BUILD_VERSION
 
     npm publish
