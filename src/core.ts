@@ -1,6 +1,5 @@
 import * as Immutable from "immutable";
-import {applyMiddleware, createStore} from 'redux';
-import {composeWithDevTools} from "redux-devtools-extension";
+import {attachReducer} from "./store";
 
 export interface Command {
     name: string
@@ -64,7 +63,6 @@ export class AppContext {
 
 export type ForestEngine = {
     currentContext: () => AppContext,
-    subscribe: (callback : (context: AppContext) => void) => void,
     invokeCommand: (instanceID: string, name: string, arg: any | undefined) => void,
     navigate: (template : string) => Promise<AppContext | undefined>,
 }
@@ -76,29 +74,29 @@ export interface IForestClient {
 
 const noopEngine : ForestEngine = {
     currentContext: AppContext.empty,
-    subscribe: () => { },
     invokeCommand: () => { },
     navigate: () => Promise.reject()
 };
 
+
+const CONTEXT_REPLACE = "[CONTEXT_REPLACE] FFB1F805-1AA6-4FED-A9A1-7007A8E696C9";
+type UpdateContextPayload = { 
+    context: AppContext 
+};
+const STATE_MERGE = "[STATE_MERGE] B37B7498-CFE0-4509-95FD-E6DBD782D42D";
+type StatePayload = { 
+    state: AppState 
+};
+type ReducerAction<T = UpdateContextPayload | StatePayload> = {
+    type: string,
+    payload: T
+}
+
 /** CreateEngine Begin *******************************************/
-export const CreateEngine : ((client: IForestClient) => ForestEngine) = ((client: IForestClient) => {
+export const CreateEngine : ((client: IForestClient, store: any) => any) = ((client: IForestClient, reduxStore: any) => {
     const initialAppContext = AppContext.empty();
 
-    type ReducerAction<T = UpdateContextPayload | StatePayload> = {
-        type: string,
-        payload: T
-    }
-    const CONTEXT_REPLACE = "[CONTEXT_REPLACE] FFB1F805-1AA6-4FED-A9A1-7007A8E696C9";
-    type UpdateContextPayload = { 
-        context: AppContext 
-    };
-    const STATE_MERGE = "[STATE_MERGE] B37B7498-CFE0-4509-95FD-E6DBD782D42D";
-    type StatePayload = { 
-        state: AppState 
-    };
-    
-    const reducer = (appContext = initialAppContext, action : ReducerAction<any>) => {
+    const reducer = (appContext: AppContext | undefined = initialAppContext, action : ReducerAction<any>) => {
         const {type, payload} = action;
         switch (type) {
             case CONTEXT_REPLACE:
@@ -120,29 +118,20 @@ export const CreateEngine : ((client: IForestClient) => ForestEngine) = ((client
         return appContext;
     };
 
-    const isProduction: boolean = process.env.NODE_ENV === 'production';
-    const middlewareList = isProduction 
-        ? [] 
-        : [require('redux-immutable-state-invariant').default()];
-    const middlewareEnhancer = applyMiddleware(...middlewareList);
-    const composedEnhancers = isProduction ? middlewareEnhancer : composeWithDevTools(...[middlewareEnhancer]);
-    const store = createStore(reducer, {}, composedEnhancers);
+    const selector = attachReducer(reduxStore, '$forest', reducer);
 
     const merge = (state : AppState) => {
-        store.dispatch({ type: STATE_MERGE, payload : { state } });
+        reduxStore.dispatch({ type: STATE_MERGE, payload : { state } });
         return;
     };
 
     const replace = (context : AppContext) => {
-        store.dispatch({ type : CONTEXT_REPLACE, payload : { context } });
+        reduxStore.dispatch({ type : CONTEXT_REPLACE, payload : { context } });
         return;
     };
 
     const engine : ForestEngine = {
-        currentContext: () => store.getState(),
-        subscribe: (callback: (context: AppContext) => void) => {
-            store.subscribe(() => callback(store.getState()));
-        },
+        currentContext: () => reduxStore.getState(),
         invokeCommand: (instanceId: string, name: string, arg: any | undefined) => {
             client.invokeCommand(instanceId, name, arg).then(state => {
                 if (!state) {
@@ -152,7 +141,7 @@ export const CreateEngine : ((client: IForestClient) => ForestEngine) = ((client
             })
         },
         navigate: (template: string) => {
-            let ctx = store.getState();
+            let ctx = selector(reduxStore.getState());
             return client.navigate(template).then(state => {
                 if (!state) {
                     return;
@@ -167,6 +156,6 @@ export const CreateEngine : ((client: IForestClient) => ForestEngine) = ((client
         }
     };
     replace({ ...initialAppContext, engine });
-    return engine;
+    return selector;
 });
 /** CreateEngine End *******************************************/
