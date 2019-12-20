@@ -65,6 +65,7 @@ export type ForestEngine = {
     currentContext: () => AppContext,
     invokeCommand: (instanceID: string, name: string, arg: any | undefined) => void,
     navigate: (template : string) => Promise<AppContext | undefined>,
+    render(state: AppState) : void
 }
 
 export interface IForestClient {
@@ -75,7 +76,8 @@ export interface IForestClient {
 const noopEngine : ForestEngine = {
     currentContext: AppContext.empty,
     invokeCommand: () => { },
-    navigate: () => Promise.reject()
+    navigate: () => Promise.reject(),
+    render: (state: AppState) => { }
 };
 
 
@@ -83,7 +85,7 @@ const CONTEXT_REPLACE = "[CONTEXT_REPLACE] FFB1F805-1AA6-4FED-A9A1-7007A8E696C9"
 type UpdateContextPayload = { 
     context: AppContext 
 };
-const STATE_MERGE = "[STATE_MERGE] B37B7498-CFE0-4509-95FD-E6DBD782D42D";
+const UPDATE_STATE = "[UPDATE_STATE] B37B7498-CFE0-4509-95FD-E6DBD782D42D";
 type StatePayload = { 
     state: AppState 
 };
@@ -102,7 +104,7 @@ export const CreateEngine : ((client: IForestClient, store: any) => any) = ((cli
             case CONTEXT_REPLACE:
                 const updateContextPayload: UpdateContextPayload = payload;
                 return updateContextPayload.context;
-            case STATE_MERGE:
+            case UPDATE_STATE:
                 const mergeContextPayload: StatePayload = payload;
                 return {
                     ...appContext,
@@ -120,8 +122,8 @@ export const CreateEngine : ((client: IForestClient, store: any) => any) = ((cli
 
     const selector = attachReducer(reduxStore, '$forest', reducer);
 
-    const merge = (state : AppState) => {
-        reduxStore.dispatch({ type: STATE_MERGE, payload : { state } });
+    const updateState = (state : AppState) => {
+        reduxStore.dispatch({ type: UPDATE_STATE, payload : { state } });
         return;
     };
 
@@ -137,7 +139,7 @@ export const CreateEngine : ((client: IForestClient, store: any) => any) = ((cli
                 if (!state) {
                     return;
                 }
-                merge(state);
+                updateState(state);
             })
         },
         navigate: (template: string) => {
@@ -153,6 +155,9 @@ export const CreateEngine : ((client: IForestClient, store: any) => any) = ((cli
                 replace(newContext);
                 return newContext;
             });
+        },
+        render: (state: AppState) => {
+            updateState(state);
         }
     };
     replace({ ...initialAppContext, engine });
