@@ -10,17 +10,17 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "deep-equal": "^1.1.1",
+    "deep-equal": "^2.0.1",
     "immutable": "4.0.0-rc.12",
-    "redux": "^4.0.4"
+    "redux": "^4.0.5"
   },
   "devDependencies": {
-    "@types/jest": "24.0.20",
-    "@types/node": "12.11.7",
+    "@types/jest": "25.1.4",
+    "@types/node": "13.9.2",
     "redux-devtools-extension": "^2.13.8",
     "redux-immutable-state-invariant": "^2.1.0",
-    "tslint": "^5.20.1",
-    "typescript": "3.6.4"
+    "tslint": "^6.1.0",
+    "typescript": "3.8.3"
   },
   "author": "Virtual Dimensions",
   "license": "Apache-2.0",
