@@ -1,5 +1,5 @@
 import * as Immutable from "immutable";
-import {attachReducer} from "./store";
+import {attachReducer, Selector} from "./store";
 
 export interface Command {
     name: string
@@ -95,7 +95,7 @@ type ReducerAction<T = UpdateContextPayload | StatePayload> = {
 }
 
 /** CreateEngine Begin *******************************************/
-export const CreateEngine : ((client: IForestClient, store: any) => any) = ((client: IForestClient, reduxStore: any) => {
+export const CreateEngine : ((client: IForestClient, store: any) => Selector<AppContext>) = ((client: IForestClient, reduxStore: any) => {
     const initialAppContext = AppContext.empty();
 
     const reducer = (appContext: AppContext | undefined = initialAppContext, action : ReducerAction<any>) => {
